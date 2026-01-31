@@ -1,0 +1,46 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+services:
+    postgres:
+        image: 'postgres:15-alpine'
+        working_dir: /application
+        volumes:
+            - 'postgres_data:/var/lib/postgresql/data'
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=laravel_gate_access_control
+        ports:
+            - '38004:5432'
+
+    webserver:
+        image: 'nginx:alpine'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+        ports:
+            - '38000:80'
+        depends_on:
+            - php-fpm
+
+    php-fpm:
+        build: .
+        working_dir: /application
+        volumes:
+            - '.:/application'
+            - './php-ini-overrides.ini:/etc/php/8.5/fpm/conf.d/99-overrides.ini'
+            - './php-ini-overrides.ini:/etc/php/8.5/cli/conf.d/99-overrides.ini'
+        depends_on:
+            - postgres
+    node:
+        image: 'node:20-alpine'
+        working_dir: /application
+        volumes:
+            - '.:/application'
+        ports:
+            - '5173:5173'
+
+volumes:
+    postgres_data:

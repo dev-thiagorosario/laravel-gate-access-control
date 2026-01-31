@@ -1,59 +1,183 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Gate Access Control
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Projeto de estudo feito com Laravel Breeze e Gates para explorar controle de acesso de forma simples e organizada.
+O foco e apenas aprendizado e pratica de boas praticas dentro da arquitetura MVC (separacao clara entre camadas,
+responsabilidades pequenas e codigo facil de manter).
 
-## About Laravel
+## Objetivos do projeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Praticar autenticacao com Laravel Breeze
+- Aplicar autorizacao com Gates
+- Reforcar boas praticas de arquitetura MVC
+- Manter o codigo limpo e facil de evoluir
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Laravel
+- Laravel Breeze
+- PostgreSQL
+- Docker + Nginx + PHP-FPM
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+PHPDocker.io generated environment
+==================================
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Add to your project #
 
-## Laravel Sponsors
+Simply, unzip the file into your project, this will create `docker-compose.yml` on the root of your project and a folder
+named `phpdocker` containing nginx and php-fpm config for it.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Ensure the webserver config on `phpdocker/nginx/nginx.conf` is correct for your project. PHPDocker.io will have
+customised this file according to the front controller location relative to the docker-compose file you chose on the
+generator (by default `public/index.php`).
 
-### Premium Partners
+Note: you may place the files elsewhere in your project. Make sure you modify the locations for the php-fpm dockerfile,
+the php.ini overrides and nginx config on `docker-compose.yml` if you do so.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# How to run #
 
-## Contributing
+Dependencies:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* docker. See [https://docs.docker.com/engine/installation](https://docs.docker.com/engine/installation)
+* docker-compose. See [docs.docker.com/compose/install](https://docs.docker.com/compose/install/)
 
-## Code of Conduct
+Once you're done, simply `cd` to your project and run `docker-compose up -d`. This will initialise and start all the
+containers, then leave them running in the background.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Services exposed outside your environment ##
 
-## Security Vulnerabilities
+You can access your application via **`localhost`**. Mailhog and nginx both respond to any hostname, in case you want to
+add your own hostname on your `/etc/hosts`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Service|Address outside containers
+-------|--------------------------
+Webserver|[localhost:38000](http://localhost:38000)
+PostgreSQL|**host:** `localhost`; **port:** `38004`
 
-## License
+## Hosts within your environment ##
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+You'll need to configure your application to use any services you enabled:
+
+Service|Hostname|Port number
+------|---------|-----------
+php-fpm|php-fpm|9000
+Postgres|postgres|5432 (default)
+
+# Docker compose cheatsheet #
+
+**Note:** you need to cd first to where your docker-compose.yml file lives.
+
+* Start containers in the background: `docker-compose up -d`
+* Start containers on the foreground: `docker-compose up`. You will see a stream of logs for every container running.
+  ctrl+c stops containers.
+* Stop containers: `docker-compose stop`
+* Kill containers: `docker-compose kill`
+* View container logs: `docker-compose logs` for all containers or `docker-compose logs SERVICE_NAME` for the logs of
+  all containers in `SERVICE_NAME`.
+* Execute command inside of container: `docker-compose exec SERVICE_NAME COMMAND` where `COMMAND` is whatever you want
+  to run. Examples:
+    * Shell into the PHP container, `docker-compose exec php-fpm bash`
+    * Run symfony console, `docker-compose exec php-fpm bin/console`
+    * Open a mysql shell, `docker-compose exec mysql mysql -uroot -pCHOSEN_ROOT_PASSWORD`
+
+# Application file permissions #
+
+As in all server environments, your application needs the correct file permissions to work properly. You can change the
+files throughout the container, so you won't care if the user exists or has the same ID on your host.
+
+`docker-compose exec php-fpm chown -R www-data:www-data /application/public`
+
+# Recommendations #
+
+It's hard to avoid file permission issues when fiddling about with containers due to the fact that, from your OS point
+of view, any files created within the container are owned by the process that runs the docker engine (this is usually
+root). Different OS will also have different problems, for instance you can run stuff in containers
+using `docker exec -it -u $(id -u):$(id -g) CONTAINER_NAME COMMAND` to force your current user ID into the process, but
+this will only work if your host OS is Linux, not mac. Follow a couple of simple rules and save yourself a world of
+hurt.
+
+* Run composer outside of the php container, as doing so would install all your dependencies owned by `root` within your
+  vendor folder.
+* Run commands (ie Symfony's console, or Laravel's artisan) straight inside of your container. You can easily open a
+  shell as described above and do your thing from there.
+
+# Simple basic Xdebug configuration with integration to PHPStorm
+
+## Xdebug 2
+
+To configure **Xdebug 2** you need add these lines in php-fpm/php-ini-overrides.ini:
+
+### For linux:
+
+```
+xdebug.remote_enable = 1
+xdebug.remote_connect_back = 1
+xdebug.remote_autostart = 1
+```
+
+### For macOS and Windows:
+
+```
+xdebug.remote_enable = 1
+xdebug.remote_host = host.docker.internal
+xdebug.remote_autostart = 1
+```
+
+## Xdebug 3
+
+To configure **Xdebug 3** you need add these lines in php-fpm/php-ini-overrides.ini:
+
+### For linux:
+
+```
+xdebug.mode=debug
+xdebug.discover_client_host=true
+xdebug.start_with_request=yes
+xdebug.client_port=9000
+```
+
+### For macOS and Windows:
+
+```
+xdebug.mode = debug
+xdebug.client_host = host.docker.internal
+xdebug.start_with_request = yes
+```
+
+## Add the section “environment” to the php-fpm service in docker-compose.yml:
+
+```
+environment:
+  PHP_IDE_CONFIG: "serverName=Docker"
+```
+
+### Create a server configuration in PHPStorm:
+
+* In PHPStorm open Preferences | Languages & Frameworks | PHP | Servers
+* Add new server
+* The “Name” field should be the same as the parameter “serverName” value in “environment” in docker-compose.yml (i.e. *
+  Docker* in the example above)
+* A value of the "port" field should be the same as first port(before a colon) in "webserver" service in
+  docker-compose.yml
+* Select "Use path mappings" and set mappings between a path to your project on a host system and the Docker container.
+* Finally, add “Xdebug helper” extension in your browser, set breakpoints and start debugging
+
+### Create a launch.json for visual studio code
+```
+  {
+      "version": "0.2.0",
+      "configurations": [
+          {
+              "name": "Docker",
+              "type": "php",
+              "request": "launch",
+              "port": 9000,
+              // Server Remote Path -> Local Project Path
+              "pathMappings": {
+                  "/application/public": "${workspaceRoot}/"
+              },
+          }
+      ]
+  }
+```
