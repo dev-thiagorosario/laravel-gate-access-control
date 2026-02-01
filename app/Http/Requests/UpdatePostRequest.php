@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\CreatePostException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class CreatePostRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
     protected function prepareForValidation(): void
     {
@@ -26,11 +25,9 @@ class CreatePostRequest extends FormRequest
 
     public function authorize(): bool
     {
-        if (!auth()->check()) {
-            throw new CreatePostException('Usuario nao autenticado');
-        }
+        $post = $this->route('post');
 
-        Gate::authorize('post.create');
+        Gate::authorize('post.update', $post);
 
         return true;
     }

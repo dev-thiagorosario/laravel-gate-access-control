@@ -4,41 +4,36 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreatePostActionInterface;
-use App\Exceptions\CreatePostException;
-use App\Http\Requests\CreatePostRequest;
+use App\Actions\UpdatePostActionInterface;
+use App\Http\Requests\UpdatePostRequest;
+use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Throwable;
 
-class CreatePostController extends Controller
+class UpdatePostController extends Controller
 {
     public function __construct(
-        private readonly CreatePostActionInterface $createPostAction
+       private readonly UpdatePostActionInterface $updatePostAction
     ){}
 
-    public function __invoke(CreatePostRequest $request): JsonResponse|RedirectResponse
+    public function __invoke(UpdatePostRequest $request, Post $post): JsonResponse|RedirectResponse
     {
         try {
+            $postId = $post->id;
+            
             $validated = $request->validated();
 
-            $this->createPostAction->execute($validated);
-
-            return redirect()
-                ->route('dashboard')
-                ->with('success', 'Post criado com sucesso');
-        } catch (CreatePostException $e) {
-            report($e);
+            $this->updatePostAction->execute($postId, $validated);
 
             if ($request->expectsJson()) {
                 return response()
-                    ->json(['message' => $e->getMessage()], $e->getStatusCode());
+                    ->json(['message' => 'Post atualizado com sucesso'], 200);
             }
 
             return redirect()
-                ->back()
-                ->withErrors(['error' => $e->getMessage()])
-                ->withInput();
+                ->route('dashboard')
+                ->with('success', 'Post atualizado com sucesso');
         } catch (Throwable $e) {
             report($e);
 
