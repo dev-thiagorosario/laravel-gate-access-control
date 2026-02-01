@@ -8,6 +8,8 @@ use App\Actions\UpdatePostAction;
 use App\Actions\UpdatePostActionInterface;
 use App\Actions\ListPostsAction;
 use App\Actions\ListPostsActionInterface;
+use App\Actions\DeletePostAction;
+use App\Actions\DeletePostActionInterface;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CreatePostActionInterface::class, CreatePostAction::class);
         $this->app->bind(UpdatePostActionInterface::class, UpdatePostAction::class);
         $this->app->bind(ListPostsActionInterface::class, ListPostsAction::class);
+        $this->app->bind(DeletePostActionInterface::class, DeletePostAction::class);
     }
 
     /**

@@ -6,12 +6,22 @@
             Author: {{ $post->user?->name ?? 'Unknown' }} ·
             Posted on {{ $post->created_at->format('F j, Y') }}
         </div>
-        @can('post.update', $post)
-            <div class="mt-4">
+        <div class="mt-4 flex flex-wrap gap-2">
+            @can('post.update', $post)
                 <a href="{{ route('posts.edit', $post) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
                     Update
                 </a>
-            </div>
-        @endcan
+            @endcan
+
+            @can('post.delete', $post)
+                <form method="POST" action="{{ route('posts.destroy', $post) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                        Delete
+                    </button>
+                </form>
+            @endcan
+        </div>
     </div>
 </div>
