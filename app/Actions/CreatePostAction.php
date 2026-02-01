@@ -12,12 +12,10 @@ class CreatePostAction implements CreatePostActionInterface
     public function execute(array $data): void
     {
         $title = $data['title'];
-        $body = $data['body'];
-        $userId = auth()->id();
 
-        if ($userId === null) {
-            throw new CreatePostException('Usuario nao autenticado');
-        }
+        $body = $data['body'];
+        
+        $userId = auth()->id();
 
         Post::create([
             'user_id' => $userId,

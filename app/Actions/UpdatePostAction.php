@@ -13,8 +13,6 @@ class UpdatePostAction implements UpdatePostActionInterface
     {
         $post = Post::findOrFail($id);
 
-        Gate::authorize('post.update', $post);
-
         $title = $data['title'];
         $body = $data['body'];
 
