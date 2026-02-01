@@ -6,6 +6,11 @@
     </x-slot>
 
     <div class="py-12">
+        @if (session('success'))
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6 text-green-600">
+                {{ session('success') }}
+            </div>
+        @endif
 
         @can('post.create')
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
