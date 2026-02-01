@@ -18,10 +18,8 @@ class PostsTableSeeder extends Seeder
 
         Post::factory()
             ->count(20)
-            ->make()
-            ->each(function (Post $post) use ($userIds) {
-                $post->user_id = fake()->randomElement($userIds);
-                $post->save();
-            });
+            ->create([
+                'user_id' => fake()->randomElement($userIds),
+            ]);
     }
 }
