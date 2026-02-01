@@ -4,19 +4,29 @@ use App\Http\Controllers\CreatePostController;
 use App\Http\Controllers\DashboardViewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UpdatePostController;
+use App\Http\Controllers\DeletePostController;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+
+    return view('auth.login');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardViewController::class)->name('dashboard');
     Route::get('/posts/create', function () {
         return view('posts.create');
     })->name('posts.create');
-    Route::post('/posts', CreatePostController::class)->name('posts.store');
+    Route::post('/posts', [CreatePostController::class])->name('posts.store');
     Route::get('/posts/{post}/edit', function (Post $post) {
         return view('posts.edit', ['post' => $post]);
     })->name('posts.edit');
-    Route::patch('/posts/{post}', UpdatePostController::class)->name('posts.update');
+    Route::delete('/posts/{post}', DeletePostController::class)->name('posts.destroy');
+    Route::patch('/posts/{post}', [UpdatePostController::class])->name('posts.update');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
