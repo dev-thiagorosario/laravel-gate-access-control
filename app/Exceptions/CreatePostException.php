@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Enums\CodeExceptionEnum;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ListPostsException extends HttpException
+class CreatePostException extends HttpException
 {
     public function __construct(
-        string $message = 'Erro ao carregar os posts',
+        string $message = 'Erro ao criar post',
         ?\Throwable $previous = null,
-        int $code = CodeExceptionEnum::ERROR_LISTING_POSTS->value,
+        int $code = CodeExceptionEnum::ERROR_CREATING_POST->value,
     )
     {
         parent::__construct(500, $message, $previous, [], $code);
