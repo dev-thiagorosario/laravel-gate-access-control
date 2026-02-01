@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Actions\ListPostsAction;
 use App\Actions\ListPostsActionInterface;
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +24,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('post.create', function (User $user) {
+            return ($user->role === 'admin' || $user->role === 'user');
+        });
+
+        Gate::define('post.update', function (User $user, Post $post) {
+            return ($user->role === 'admin' || $user->id === $post->user_id);
+        });
+
+        Gate::define('post.delete', function (User $user, Post $post) {
+            return ($user->role === 'admin' || $user->id === $post->user_id);
+        });
     }
 }
