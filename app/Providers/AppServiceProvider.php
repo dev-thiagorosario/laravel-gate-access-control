@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Actions\CreatePostAction;
 use App\Actions\CreatePostActionInterface;
-use App\Actions\FetchPostsFromApiAction;
-use App\Actions\FetchPostsFromApiActionInterface;
+use App\Actions\UpdatePostAction;
+use App\Actions\UpdatePostActionInterface;
 use App\Actions\ListPostsAction;
 use App\Actions\ListPostsActionInterface;
 use App\Models\Post;
@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CreatePostActionInterface::class, CreatePostAction::class);
-        $this->app->bind(FetchPostsFromApiActionInterface::class, FetchPostsFromApiAction::class);
+        $this->app->bind(UpdatePostActionInterface::class, UpdatePostAction::class);
         $this->app->bind(ListPostsActionInterface::class, ListPostsAction::class);
     }
 

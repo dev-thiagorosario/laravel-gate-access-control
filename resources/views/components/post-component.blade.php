@@ -6,5 +6,12 @@
             Author: {{ $post->user?->name ?? 'Unknown' }} ·
             Posted on {{ $post->created_at->format('F j, Y') }}
         </div>
+        @can('post.update', $post)
+            <div class="mt-4">
+                <a href="{{ route('posts.edit', $post) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                    Update
+                </a>
+            </div>
+        @endcan
     </div>
 </div>

@@ -3,6 +3,8 @@
 use App\Http\Controllers\CreatePostController;
 use App\Http\Controllers\DashboardViewController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UpdatePostController;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -11,6 +13,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('posts.create');
     })->name('posts.create');
     Route::post('/posts', CreatePostController::class)->name('posts.store');
+    Route::get('/posts/{post}/edit', function (Post $post) {
+        return view('posts.edit', ['post' => $post]);
+    })->name('posts.edit');
+    Route::patch('/posts/{post}', UpdatePostController::class)->name('posts.update');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
